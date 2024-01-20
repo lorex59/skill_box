@@ -1,0 +1,91 @@
+Number 1
+
+SELECT orderNumber, productCode, quantityOrdered * priceEach as totalCost
+FROM orderdetails
+ORDER BY totalCost DESC
+LIMIT 10
+
+Number 2
+
+SELECT orderNumber,  sum(quantityOrdered * priceEach) as total
+FROM orderdetails
+GROUP BY orderNumber
+HAVING total > 59000
+
+Number 3
+
+SELECT 
+  orderdetails.orderNumber,  
+  orders.orderDate as orderDate,
+  orders.status as status,
+  sum(orderdetails.quantityOrdered * orderdetails.priceEach) as total
+FROM orderdetails INNER JOIN orders
+ON orderdetails.orderNumber = orders.orderNumber
+GROUP BY orderdetails.orderNumber
+HAVING total > 59000
+
+Number 4
+
+SELECT 
+  customers.contactFirstName as contactFirstName,
+  customers.contactLastName as contactLastName,
+  customers.country as country,
+  orderdetails.orderNumber,  
+  orders.orderDate as orderDate,
+  orders.status as status,
+  sum(orderdetails.quantityOrdered * orderdetails.priceEach) as total
+FROM orderdetails 
+INNER JOIN orders
+  ON orderdetails.orderNumber = orders.orderNumber
+INNER JOIN customers
+  ON orders.customerNumber = customers.customerNumber
+GROUP BY orderdetails.orderNumber
+HAVING total > 59000
+
+Number 5
+
+SELECT 
+  products.productName,
+  SUM(orderdetails.quantityOrdered * orderdetails.priceEach) as total
+FROM orderdetails
+ INNER JOIN products
+  ON products.productCode = orderdetails.productCode
+GROUP BY orderdetails.productCode
+ORDER BY total DESC
+
+Number 6
+
+SELECT
+ employees.firstName,
+ employees.lastName,
+ contactFirstName,
+ contactLastName
+FROM customers
+LEFT JOIN employees
+ ON customers.salesRepEmployeeNumber = employees.employeeNumber
+
+UNION
+
+SELECT
+ employees.firstName,
+ employees.lastName,
+ contactFirstName,
+ contactLastName
+FROM customers
+RIGHT JOIN employees
+ ON customers.salesRepEmployeeNumber = employees.employeeNumber
+
+Number 7
+
+SELECT 
+ first.firstName,
+ first.lastName,
+ first.jobTitle,
+ second.firstName AS subFirstName,
+ second.lastName AS subLastName
+FROM employees as first
+LEFT JOIN employees as second
+ON first.reportsTo = second.employeeNumber
+
+
+

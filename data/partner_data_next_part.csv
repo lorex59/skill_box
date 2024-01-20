@@ -1,0 +1,11 @@
+id,job,marital,education,balance,housing,loan,default
+1001,technician,,tertiary,0,no,no,yes
+1002,blue-collar,married,primary,300,yes,no,no
+1003,management,married,tertiary,15,yes,no,no
+1004,blue-collar,single,primary,-100,yes,no,no
+1005,services,divorced,secondary,430,yes,yes,yes
+1006,management,married,tertiary,2071,yes,no,no
+1007,entrepreneur,married,secondary,-1882,no,no,no
+1008,unknown,single,unknown,1819,no,no,no
+1009,self-employed,,secondary,146,yes,no,no
+1010,services,single,secondary,297,no,no,no
