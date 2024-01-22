@@ -11,7 +11,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.compose import ColumnTransformer
-import joblib
+import dill 
 
 
 from sklearn.ensemble import RandomForestClassifier
@@ -35,13 +35,15 @@ def filter_data(df):
    # Возвращаем копию датафрейма, inplace тут делать нельзя!
    return df.drop(columns_to_drop, axis=1)
 
-def calculate_outliers(data):
-    q25 = data.quantile(0.25)
-    q75 = data.quantile(0.75)
-    iqr = q75 - q25
-    return (q25 - 1.5 * iqr, q75 + 1.5 * iqr)
 
 def emissions_data(df):
+    def calculate_outliers(data):
+        q25 = data.quantile(0.25)
+        q75 = data.quantile(0.75)
+        iqr = q75 - q25
+        return (q25 - 1.5 * iqr, q75 + 1.5 * iqr)
+
+    
     df_new = df.copy()
     boundaries = calculate_outliers(df_new['year'])
     df_new.loc[df_new['year'] > boundaries[1], 'year'] = round(boundaries[1])
@@ -49,14 +51,15 @@ def emissions_data(df):
     return df_new
 
 
-def short_model(x):
-    if not pd.isna(x):
-        return x.lower().split(' ')[0]
-    else:
-        return x
+
 
 
 def new_features(df):
+    def short_model(x):
+        if not pd.isna(x):
+            return x.lower().split(' ')[0]
+        else:
+            return x
     df_new = df.copy()
     
     df_new.loc[:, 'short_model'] = df_new['model'].apply(short_model)
@@ -124,7 +127,9 @@ def main():
             best_pipe = pipe
 
     print(f'best model: {type(best_pipe.named_steps["classifier"]).__name__}, accuracy: {best_score:.4f}')
-    joblib.dump(best_pipe, 'homework.pkl')
+    file_name = 'homework.pkl'
+    with open(file_name, 'wb') as file:
+        dill.dump(best_pipe, file)
     
 if __name__ == '__main__':
     main()
